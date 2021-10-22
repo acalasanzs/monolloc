@@ -28,14 +28,16 @@ dt = pd.DataFrame(data)
 print(dt)
 print("0:t,1:ti,2:tf,3:te")
 print("Zeros are x")
-current = ti
+current = ti.copy()
 quantum = 0
+print(ti,current)
 for idx,x in enumerate(ti):
     first = min(current)
     tf[ti.index(first)] = quantum + t[ti.index(first)]
     quantum += t[ti.index(first)]
+    current.remove(first)
     #del current[ti.index(first)]
-print(ti)
+print(ti,current)
 update()
 print(pd.DataFrame(data))
 print("0:t,1:ti,2:tf,3:te")
