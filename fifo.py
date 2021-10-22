@@ -13,8 +13,8 @@ t.input()
 ti = Assgn(Ar2Dict(chars[:abc.ans],"ti"),conj="com a",rules=[True,False,True])
 ti.input()
 
-tf = np.zeros((len(chars[:abc.ans]),))
-te = np.zeros((len(chars[:abc.ans]),))
+tf = np.zeros((len(chars[:abc.ans]),)).tolist()
+te = np.zeros((len(chars[:abc.ans]),)).tolist()
 """ process = np.array(chars[:abc.ans]).reshape(len(chars[:abc.ans]),1)
 print(process) """
 ti = ti.array
@@ -37,7 +37,11 @@ for idx,x in enumerate(ti):
     quantum += t[ti.index(first)]
     current.remove(first)
     #del current[ti.index(first)]
-print(ti,current)
+table = np.zeros((len(chars[:abc.ans]),quantum))
+for i,j in zip(ti,tf):
+    for x in range(int(i),int(j)):
+        table[ti.index(x)][tf.index(j)] = 1
 update()
 print(pd.DataFrame(data))
 print("0:t,1:ti,2:tf,3:te")
+print(table)
