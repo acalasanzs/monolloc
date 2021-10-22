@@ -10,7 +10,7 @@ abc = Assgn(Ar2Dict(["cuants procesos (max: 26)"],"units"),vals=range(1,27),rule
 abc.input()
 t = Assgn(Ar2Dict(chars[:abc.ans],"t"),conj="com a",rules=[False,False,True])
 t.input()
-ti = Assgn(Ar2Dict(chars[:abc.ans],"ti"),conj="com a",rules=[False,False,True])
+ti = Assgn(Ar2Dict(chars[:abc.ans],"ti"),conj="com a",rules=[True,False,True])
 ti.input()
 
 tf = np.zeros((len(chars[:abc.ans]),))
@@ -29,7 +29,7 @@ print(dt)
 print("0:t,1:ti,2:tf,3:te")
 print("Zeros are x")
 current = ti.copy()
-quantum = 0
+quantum = -1
 print(ti,current)
 for idx,x in enumerate(ti):
     first = min(current)
