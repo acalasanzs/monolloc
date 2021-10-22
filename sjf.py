@@ -3,6 +3,7 @@ import numpy as np
 import csv
 from assgnopts import *
 import string
+print("Short Job First")
 "There's an errror with self.vals that return 0 array"
 
 chars = [x for x in string.ascii_uppercase]
@@ -41,11 +42,11 @@ table = np.zeros((len(chars[:abc.ans]),sum(t)))
 tabley = 0
 current = t.copy()
 print(" | ".join([str(tuple(a)) for a in zip(ti,tf)]))
-
 for idx,k in enumerate(ti):
+    print(t.index(first))
     first = (min(current),tf[t.index(first)])
     tablex = first[0]
-    print(range(first[0],first[1]+1))
+    #print(range(first[0],first[1]+1))
     for x in range(first[0],first[1]+1):
         try:
             assert table[tabley-1][tablex] in (1,2)
