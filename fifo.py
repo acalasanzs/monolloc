@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import csv
 from assgnopts import *
 import string
 "There's an errror with self.vals that return 0 array"
@@ -67,4 +68,7 @@ update()
 print(pd.DataFrame(data))
 print("0:t,1:ti,2:tf,3:te")
 print(table.astype(int))
-np.savetxt('data.csv',table.astype(int),delimiter=',')
+with open('fifo-data.csv', mode='w') as file:
+    file = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    for x in table:
+        file.writerow([int(i) for i in x])
