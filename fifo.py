@@ -42,7 +42,7 @@ tabley = 0
 current = ti.copy()
 print(" | ".join([str(tuple(a)) for a in zip(ti,tf)]))
 
-for k in ti:
+for idx,k in enumerate(ti):
     first = (min(current),tf[ti.index(min(current))])
     tablex = first[0]
     print(range(first[0],first[1]+1))
@@ -50,6 +50,7 @@ for k in ti:
         try:
             assert table[tabley-1][tablex] in (1,2)
             table[tabley][tablex] = 2
+            te[idx] += 1
         except:
             try:
                 table[tabley][tablex] = 1
