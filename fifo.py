@@ -44,13 +44,16 @@ print(" | ".join([str(tuple(a)) for a in zip(ti,tf)]))
 
 for k in ti:
     first = (min(current),tf[ti.index(min(current))])
-    print(first)
-    current.remove(min(current))
-    tabley += 1
     for x in range(first[0],first[1]):
-        print(tabley)
-        table[tabley][tablex] = 1
+        print(tabley,tablex)
+        if table[tabley+1][tablex] == 1:
+            table[tabley+1][tablex] = 2
+            table[tabley][tablex] = 1
+        else:
+            table[tabley][tablex] = 1
         tablex += 1
+    tabley += 1
+    current.remove(min(current))
 
 
 table = table[::-1]
