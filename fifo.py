@@ -3,6 +3,7 @@ import numpy as np
 import csv
 from assgnopts import *
 import string
+print("First Input First Output")
 "There's an errror with self.vals that return 0 array"
 
 chars = [x for x in string.ascii_uppercase]

@@ -34,7 +34,7 @@ quantum = -1
 for idx,x in enumerate(t):
     first = min(current)
     tf[t.index(first)] = quantum + first
-    quantum += t
+    quantum += first
     current.remove(first)
     #del current[ti.index(first)]
 table = np.zeros((len(chars[:abc.ans]),sum(t)))
