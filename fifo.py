@@ -48,7 +48,7 @@ for k in ti:
     print(range(first[0],first[1]+1))
     for x in range(first[0],first[1]+1):
         try:
-            assert table[tabley-1][tablex] == 1
+            assert table[tabley-1][tablex] in (1,2)
             table[tabley][tablex] = 2
         except:
             try:
