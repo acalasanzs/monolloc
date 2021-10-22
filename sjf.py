@@ -29,21 +29,21 @@ dt = pd.DataFrame(data)
 print(dt)
 print("0:t,1:ti,2:tf,3:te")
 print("Zeros are x")
-current = ti.copy()
+current = t.copy()
 quantum = -1
-for idx,x in enumerate(ti):
+for idx,x in enumerate(t):
     first = min(current)
-    tf[ti.index(first)] = quantum + t[ti.index(first)]
-    quantum += t[ti.index(first)]
+    tf[t.index(first)] = quantum + first
+    quantum += t
     current.remove(first)
     #del current[ti.index(first)]
 table = np.zeros((len(chars[:abc.ans]),sum(t)))
 tabley = 0
-current = ti.copy()
+current = t.copy()
 print(" | ".join([str(tuple(a)) for a in zip(ti,tf)]))
 
 for idx,k in enumerate(ti):
-    first = (min(current),tf[ti.index(min(current))])
+    first = (min(current),tf[t.index(first)])
     tablex = first[0]
     print(range(first[0],first[1]+1))
     for x in range(first[0],first[1]+1):
