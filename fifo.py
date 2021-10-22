@@ -30,7 +30,6 @@ print("0:t,1:ti,2:tf,3:te")
 print("Zeros are x")
 current = ti.copy()
 quantum = -1
-print(ti,current)
 for idx,x in enumerate(ti):
     first = min(current)
     tf[ti.index(first)] = quantum + t[ti.index(first)]
@@ -40,13 +39,20 @@ for idx,x in enumerate(ti):
 table = np.zeros((len(chars[:abc.ans]),quantum))
 tablex = -1
 tabley = -1
-
+current = ti.copy()
 print(" | ".join([str(tuple(a)) for a in zip(ti,tf)]))
-for i,j in zip(ti,tf):
+
+for k in ti:
+    first = (min(current),tf[ti.index(min(current))])
+    print(first)
+    current.remove(min(current))
     tabley += 1
-    for x in range(int(i),int(j)):
+    for x in range(first[0],first[1]):
+        print(tabley)
         table[tabley][tablex] = 1
         tablex += 1
+
+
 table = table[::-1]
 update()
 print(pd.DataFrame(data))
