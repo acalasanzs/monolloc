@@ -66,5 +66,5 @@ table = table[::-1]
 update()
 print(pd.DataFrame(data))
 print("0:t,1:ti,2:tf,3:te")
-print(table)
-np.savetxt('data.csv',table,delimiter=',')
+print(table.astype(int))
+np.savetxt('data.csv',table.astype(int),delimiter=',')
