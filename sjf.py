@@ -30,23 +30,28 @@ dt = pd.DataFrame(data)
 print(dt)
 print("0:t,1:ti,2:tf,3:te")
 print("Zeros are x")
-current = t.copy()
-quantum = -1
-for idx,x in enumerate(t):
+current = ti.copy()
+quantum = 0
+for idx,x in enumerate(ti):
     first = min(current)
-    tf[t.index(first)] = quantum + first
-    quantum += first
+    tf[ti.index(first)] = quantum + t[ti.index(first)]
+    quantum += t[ti.index(first)]
     current.remove(first)
     #del current[ti.index(first)]
 table = np.zeros((len(chars[:abc.ans]),sum(t)))
 tabley = 0
 current = ti.copy()
-print(" | ".join([str(tuple(a)) for a in zip(ti,tf)]))
+ranges = [tuple(a) for a in zip(ti,tf)]
+print(" | ".join([str(a) for a in ranges]))
+
 for idx,k in enumerate(ti):
-    first2 = (min(current),tf[t.index(first)])
-    tablex = first2[0]
-    print(range(first2[0],first2[1]+1))
-    for x in range(first2[0],first2[1]+1):
+    minu = []
+    for rang in ranges:
+        minu.append(len(range(rang[0],rang[1])))
+    first2 = min(minu)
+    tablex = ranges[[len(range(x[0],x[1])) for x in ranges].index(first2)][0]
+    print(range(ranges[[len(range(x[0],x[1])) for x in ranges].index(first2)][0],ranges[[len(range(x[0],x[1])) for x in ranges].index(first2)][1]))
+    for x in range(ranges[[len(range(x[0],x[1])) for x in ranges].index(first2)][0],ranges[[len(range(x[0],x[1])) for x in ranges].index(first2)][1]):
         try:
             assert table[tabley-1][tablex] in (1,2)
             table[tabley][tablex] = 2
@@ -59,7 +64,7 @@ for idx,k in enumerate(ti):
         tablex += 1
     else:
         tabley += 1
-    current.remove(min(current))
+    ranges.remove(ranges[[len(range(x[0],x[1])) for x in ranges].index(first2)])
 
 
 table = table[::-1]
