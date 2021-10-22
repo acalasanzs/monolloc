@@ -8,6 +8,8 @@ print("First Input First Output")
 
 chars = [x for x in string.ascii_uppercase]
 
+# Set values of inputs
+
 abc = Assgn(Ar2Dict(["cuants procesos (max: 26)"],"units"),vals=range(1,27),rules=[False,False,True])
 abc.input()
 t = Assgn(Ar2Dict(chars[:abc.ans],"t"),conj="com a",rules=[False,False,True])
@@ -17,8 +19,7 @@ ti.input()
 
 tf = np.zeros((len(chars[:abc.ans]),)).tolist()
 te = np.zeros((len(chars[:abc.ans]),)).tolist()
-""" process = np.array(chars[:abc.ans]).reshape(len(chars[:abc.ans]),1)
-print(process) """
+
 ti = ti.array
 t = t.array
 data = {}
@@ -27,9 +28,7 @@ def update():
         data[x] = [t[idx],ti[idx],tf[idx],te[idx]]
 update()
 dt = pd.DataFrame(data)
-print(dt)
-print("0:t,1:ti,2:tf,3:te")
-print("Zeros are x")
+
 current = ti.copy()
 quantum = -1
 for idx,x in enumerate(ti):
@@ -37,7 +36,6 @@ for idx,x in enumerate(ti):
     tf[ti.index(first)] = quantum + t[ti.index(first)]
     quantum += t[ti.index(first)]
     current.remove(first)
-    #del current[ti.index(first)]
 table = np.zeros((len(chars[:abc.ans]),sum(t)))
 tabley = 0
 current = ti.copy()
@@ -46,7 +44,6 @@ print(" | ".join([str(tuple(a)) for a in zip(ti,tf)]))
 for idx,k in enumerate(ti):
     first = (min(current),tf[ti.index(min(current))])
     tablex = first[0]
-    print(range(first[0],first[1]+1))
     for x in range(first[0],first[1]+1):
         try:
             assert table[tabley-1][tablex] in (1,2)
