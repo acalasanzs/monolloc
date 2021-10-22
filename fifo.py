@@ -36,7 +36,7 @@ for idx,x in enumerate(ti):
     quantum += t[ti.index(first)]
     current.remove(first)
     #del current[ti.index(first)]
-table = np.zeros((len(chars[:abc.ans]),quantum))
+table = np.zeros((len(chars[:abc.ans]),quantum+1))
 tablex = 0
 tabley = 0
 current = ti.copy()
@@ -44,14 +44,18 @@ print(" | ".join([str(tuple(a)) for a in zip(ti,tf)]))
 
 for k in ti:
     first = (min(current),tf[ti.index(min(current))])
-    for x in range(first[0],first[1]-1):
-        print(tabley,tablex)
+    if first == (0,1):
+        first = (0,1+1)
+    for x in range(first[0],first[1]):
         try:
-            assert table[tabley+1][tablex] == 1
-            table[tabley+1][tablex] = 2
+            assert table[tabley-1][tablex-1] == 1
+            table[tabley][tablex-1] = 2
             table[tabley][tablex] = 1
         except:
-            table[tabley][tablex] = 1
+            try:
+                table[tabley][tablex] = 1
+            except IndexError:
+                break
         tablex += 1
     else:
         tabley += 1
