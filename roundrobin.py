@@ -3,7 +3,7 @@ import numpy as np
 import csv
 from assgnopts import *
 import string
-print("Short Job First")
+print("Round Robin")
 "There's an errror with self.vals that return 0 array"
 
 chars = [x for x in string.ascii_uppercase]
@@ -38,20 +38,18 @@ for idx,x in enumerate(ti):
     quantum += t[ti.index(first)]
     current.remove(first)
     #del current[ti.index(first)]
-tf = [int(a) for a in tf]
 table = np.zeros((len(chars[:abc.ans]),sum(t)))
 tabley = 0
 current = ti.copy()
 ranges = [tuple(a) for a in zip(ti,tf)]
 print(" | ".join([str(a) for a in ranges]))
-print(tf)
+
 for idx,k in enumerate(ti):
     minu = []
     for rang in ranges:
         minu.append(len(range(rang[0],rang[1])))
     first2 = min(minu)
     tablex = ranges[[len(range(x[0],x[1])) for x in ranges].index(first2)][0]
-    print(range(ranges[[len(range(x[0],x[1])) for x in ranges].index(first2)][0],ranges[[len(range(x[0],x[1])) for x in ranges].index(first2)][1]))
     for x in range(ranges[[len(range(x[0],x[1])) for x in ranges].index(first2)][0],ranges[[len(range(x[0],x[1])) for x in ranges].index(first2)][1]):
         try:
             assert table[tabley-1][tablex] in (1,2)
