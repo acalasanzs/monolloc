@@ -37,21 +37,19 @@ for idx,x in enumerate(ti):
     quantum += t[ti.index(first)]
     current.remove(first)
     #del current[ti.index(first)]
-table = np.zeros((len(chars[:abc.ans]),quantum+1))
-tablex = 0
+table = np.zeros((len(chars[:abc.ans]),sum(t)))
 tabley = 0
 current = ti.copy()
 print(" | ".join([str(tuple(a)) for a in zip(ti,tf)]))
 
 for k in ti:
     first = (min(current),tf[ti.index(min(current))])
-    if first == (0,1):
-        first = (0,1+1)
-    for x in range(first[0],first[1]):
+    tablex = first[0]
+    print(range(first[0],first[1]+1))
+    for x in range(first[0],first[1]+1):
         try:
-            assert table[tabley-1][tablex-1] == 1
-            table[tabley][tablex-1] = 2
-            table[tabley][tablex] = 1
+            assert table[tabley-1][tablex] == 1
+            table[tabley][tablex] = 2
         except:
             try:
                 table[tabley][tablex] = 1
@@ -68,7 +66,7 @@ update()
 print(pd.DataFrame(data))
 print("0:t,1:ti,2:tf,3:te")
 print(table.astype(int))
-with open('fifo-data.csv', mode='w') as file:
+with open('data.csv', mode='w') as file:
     file = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
     for x in table:
         file.writerow([int(i) for i in x])
