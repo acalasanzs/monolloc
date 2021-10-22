@@ -38,9 +38,16 @@ for idx,x in enumerate(ti):
     current.remove(first)
     #del current[ti.index(first)]
 table = np.zeros((len(chars[:abc.ans]),quantum))
+tablex = -1
+tabley = -1
+
+print(" | ".join([str(tuple(a)) for a in zip(ti,tf)]))
 for i,j in zip(ti,tf):
+    tabley += 1
     for x in range(int(i),int(j)):
-        table[ti.index(x)][tf.index(j)] = 1
+        table[tabley][tablex] = 1
+        tablex += 1
+table = table[::-1]
 update()
 print(pd.DataFrame(data))
 print("0:t,1:ti,2:tf,3:te")
