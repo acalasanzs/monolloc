@@ -1,7 +1,7 @@
 import numpy as np
 import csv
 from assgnopts import *
-print("First Input First Output")
+print(color.t.OKGREEN+"First Input First Output"+color.end)
 "There's an errror with self.vals that return 0 array"
 
 def colnum_string(n):
@@ -15,7 +15,7 @@ chars = []
 
 # Set values of inputs
 
-abc = Assgn(Ar2Dict(["cuants procesos (max: 1000)"],"units"),vals=range(1,1001),rules=[False,False,True])
+abc = Assgn(Ar2Dict(["cuants procesos"],"units"),vals=range(1,1001),rules=[False,False,True],ui=False)
 abc.input()
 
 for o in range(1,abc.ans+1):

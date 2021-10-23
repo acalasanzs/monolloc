@@ -123,7 +123,7 @@ for idx,k in enumerate(ti):
     # Copy the burst time into rt[]
     for i in range(abc.ans):
         rem_bt[i] = ti[i]
-    t = 0 # Current time
+    time = 0 # Current time
  
     # Keep traversing processes in round
     # robin manner until all of them are
@@ -144,14 +144,14 @@ for idx,k in enumerate(ti):
                  
                     # Increase the value of t i.e. shows
                     # how much time a process has been processed
-                    t += quantum
+                    time += quantum
  
                     # Decrease the burst_time of current
                     # process by quantum
                     rem_bt[i] -= quantum
                     tabley += 1
                     try:
-                        table[tabley][tablex] = 2
+                        table[tabley][time] = 2
                     except:
                         pass
                  
@@ -161,18 +161,18 @@ for idx,k in enumerate(ti):
                  
                     # Increase the value of t i.e. shows
                     # how much time a process has been processed
-                    t = t + rem_bt[i]
+                    time = time + rem_bt[i]
  
                     # Waiting time is current time minus
                     # time used by this process
-                    wt[i] = t - ti[i]
+                    wt[i] = time - ti[i]
  
                     # As the process gets fully executed
                     # make its remaining burst time = 0
                     rem_bt[i] = 0
                     tabley -= 1
                     try:
-                        table[tabley][tablex] = 1
+                        table[tabley][time] = 1
                     except:
                         pass
             tablex += 1     

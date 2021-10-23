@@ -1,8 +1,7 @@
-import pygame
 import numpy as np
 import csv
 from assgnopts import *
-print(color.t.OKGREEN+"First Input First Output"+color.end)
+print(color.t.OKGREEN+"Round Robin"+color.end)
 "There's an errror with self.vals that return 0 array"
 
 def colnum_string(n):
@@ -22,6 +21,10 @@ abc.input()
 for o in range(1,abc.ans+1):
     chars.append(colnum_string(o))
 
+quantum = Assgn(Ar2Dict(["cuants procesos (max: 1000)"],"units"),vals=range(1,1001),rules=[False,False,True],ui=False)
+quantum.input()
+quantum = quantum.ans
+
 t = Assgn(Ar2Dict(chars,"t"),conj="com a",rules=[False,False,True])
 t.input()
 ti = Assgn(Ar2Dict(chars,"ti"),conj="com a",rules=[True,False,True])
@@ -38,11 +41,11 @@ t = t.array
 
 # Calculate tf with quantum and ti copy to know wich is first
 current = ti.copy()
-quantum = -1
+quant = -1
 for idx,x in enumerate(ti):
     first = min(current)
-    tf[ti.index(first)] = quantum + t[ti.index(first)]
-    quantum += t[ti.index(first)]
+    tf[ti.index(first)] = quant + t[ti.index(first)]
+    quant += t[ti.index(first)]
     current.remove(first)
 
 # Make a 2D chart of 0 of length sum(t)
@@ -95,59 +98,3 @@ with open('data.csv', mode='w',newline='') as file:
     file = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
     for x in table:
         file.writerow([int(i) for i in x])
-
-
-
-# Init font pygame
-pygame.font.init()
-
-# Set display
-screen = pygame.display.set_mode((1000, 600), pygame.RESIZABLE)
-
-# Title and Icon
-pygame.display.set_caption("FIFO SOLVER")
-img = pygame.image.load('fifo.jpg')
-pygame.display.set_icon(img)
-
-run = True
-
-clock = pygame.time.Clock()
-
-dif = 1000/table.shape[0]
-
-
-def drawGrid():
-    global blockSize
-    blockSize = int(150/table.shape[0]) #Set the size of the grid block
-    while screen.get_width() % blockSize > 0:
-        blockSize -= 1  # Make it fit the grid
-    for x in range(0, screen.get_width(), blockSize):
-        for y in range(0, screen.get_height(), blockSize):
-            try:
-                assert table[int(y/blockSize)][int(x/blockSize)] == 1
-                color = (0, 184, 148)   # If 1 color green
-            except:
-                try:
-                    assert table[int(y/blockSize)][int(x/blockSize)] == 2
-                    color = (225, 112, 85) # If 2 color red
-                except:
-                    color = (25,25,25) # Else color black
-            rect = pygame.Rect(x, y, blockSize, blockSize)
-            pygame.draw.rect(screen, color, rect)
-            # Draw square border
-            if blockSize > 15:
-                pygame.draw.rect(screen, (255,255,255), rect, 1)
-
-while True:
-    dif = screen.get_width()/table.shape[0]
-    screen.fill((25,25,25))
-
-    drawGrid()
-    pygame.display.update()
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-
-        if event.type == pygame.VIDEORESIZE:
-            # There's some code to add back window content here.
-            screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)

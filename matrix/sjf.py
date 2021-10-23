@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import csv
 from assgnopts import *
-print("Short Job First")
+print(color.t.OKGREEN+"Short Job First"+color.end)
 "There's an errror with self.vals that return 0 array"
 
 def colnum_string(n):
@@ -14,7 +14,7 @@ def colnum_string(n):
 # Get ABCDEFGH...
 chars = []
 
-abc = Assgn(Ar2Dict(["cuants procesos (max: 26)"],"units"),vals=range(1,27),rules=[False,False,True])
+abc = Assgn(Ar2Dict(["cuants procesos"],"units"),vals=range(1,27),rules=[False,False,True],ui=False)
 abc.input()
 
 for o in range(1,abc.ans+1):
