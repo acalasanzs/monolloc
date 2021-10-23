@@ -1,77 +1,111 @@
-import pandas as pd
-import numpy as np
-import csv
-from assgnopts import *
-import string
-print("Round Robin")
-"There's an errror with self.vals that return 0 array"
-
-chars = [x for x in string.ascii_uppercase]
-
-abc = Assgn(Ar2Dict(["cuants procesos (max: 26)"],"units"),vals=range(1,27),rules=[False,False,True])
-abc.input()
-t = Assgn(Ar2Dict(chars[:abc.ans],"t"),conj="com a",rules=[False,False,True])
-t.input()
-ti = Assgn(Ar2Dict(chars[:abc.ans],"ti"),conj="com a",rules=[True,False,True])
-ti.input()
-
-tf = np.zeros((len(chars[:abc.ans]),)).tolist()
-te = np.zeros((len(chars[:abc.ans]),)).tolist()
-""" process = np.array(chars[:abc.ans]).reshape(len(chars[:abc.ans]),1)
-print(process) """
-ti = ti.array
-t = t.array
-data = {}
-def update():
-    for idx,x in enumerate(chars[:abc.ans]):
-        data[x] = [t[idx],ti[idx],tf[idx],te[idx]]
-update()
-dt = pd.DataFrame(data)
-print(dt)
-print("0:t,1:ti,2:tf,3:te")
-print("Zeros are x")
-current = ti.copy()
-quantum = 0
-for idx,x in enumerate(ti):
-    first = min(current)
-    tf[ti.index(first)] = quantum + t[ti.index(first)]
-    quantum += t[ti.index(first)]
-    current.remove(first)
-    #del current[ti.index(first)]
-table = np.zeros((len(chars[:abc.ans]),sum(t)))
-tabley = 0
-current = ti.copy()
-ranges = [tuple(a) for a in zip(ti,tf)]
-print(" | ".join([str(a) for a in ranges]))
-
-for idx,k in enumerate(ti):
-    minu = []
-    for rang in ranges:
-        minu.append(len(range(rang[0],rang[1])))
-    first2 = min(minu)
-    tablex = ranges[[len(range(x[0],x[1])) for x in ranges].index(first2)][0]
-    for x in range(ranges[[len(range(x[0],x[1])) for x in ranges].index(first2)][0],ranges[[len(range(x[0],x[1])) for x in ranges].index(first2)][1]):
-        try:
-            assert table[tabley-1][tablex] in (1,2)
-            table[tabley][tablex] = 2
-            te[idx] += 1
-        except:
-            try:
-                table[tabley][tablex] = 1
-            except IndexError:
-                break
-        tablex += 1
-    else:
-        tabley += 1
-    ranges.remove(ranges[[len(range(x[0],x[1])) for x in ranges].index(first2)])
-
-
-table = table[::-1]
-update()
-print(pd.DataFrame(data))
-print("0:t,1:ti,2:tf,3:te")
-print(table.astype(int))
-with open('data.csv', mode='w',newline='') as file:
-    file = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-    for x in table:
-        file.writerow([int(i) for i in x])
+# Python3 program for implementation of
+# RR scheduling
+ 
+# Function to find the waiting time
+# for all processes
+def findWaitingTime(processes, n, bt,
+                         wt, quantum):
+    rem_bt = [0] * n
+ 
+    # Copy the burst time into rt[]
+    for i in range(n):
+        rem_bt[i] = bt[i]
+    t = 0 # Current time
+ 
+    # Keep traversing processes in round
+    # robin manner until all of them are
+    # not done.
+    while(1):
+        done = True
+ 
+        # Traverse all processes one by
+        # one repeatedly
+        for i in range(n):
+             
+            # If burst time of a process is greater
+            # than 0 then only need to process further
+            if (rem_bt[i] > 0) :
+                done = False # There is a pending process
+                 
+                if (rem_bt[i] > quantum) :
+                 
+                    # Increase the value of t i.e. shows
+                    # how much time a process has been processed
+                    t += quantum
+ 
+                    # Decrease the burst_time of current
+                    # process by quantum
+                    rem_bt[i] -= quantum
+                 
+                # If burst time is smaller than or equal 
+                # to quantum. Last cycle for this process
+                else:
+                 
+                    # Increase the value of t i.e. shows
+                    # how much time a process has been processed
+                    t = t + rem_bt[i]
+ 
+                    # Waiting time is current time minus
+                    # time used by this process
+                    wt[i] = t - bt[i]
+ 
+                    # As the process gets fully executed
+                    # make its remaining burst time = 0
+                    rem_bt[i] = 0
+                 
+        # If all processes are done
+        if (done == True):
+            break
+             
+# Function to calculate turn around time
+def findTurnAroundTime(processes, n, bt, wt, tat):
+     
+    # Calculating turnaround time
+    for i in range(n):
+        tat[i] = bt[i] + wt[i]
+ 
+ 
+# Function to calculate average waiting
+# and turn-around times.
+def findavgTime(processes, n, bt, quantum):
+    wt = [0] * n
+    tat = [0] * n
+ 
+    # Function to find waiting time
+    # of all processes
+    findWaitingTime(processes, n, bt,
+                         wt, quantum)
+ 
+    # Function to find turn around time
+    # for all processes
+    findTurnAroundTime(processes, n, bt,
+                                wt, tat)
+ 
+    # Display processes along with all details
+    print("Processes    Burst Time     Waiting",
+                     "Time    Turn-Around Time")
+    total_wt = 0
+    total_tat = 0
+    for i in range(n):
+ 
+        total_wt = total_wt + wt[i]
+        total_tat = total_tat + tat[i]
+        print(" ", i + 1, "\t\t", bt[i],
+              "\t\t", wt[i], "\t\t", tat[i])
+ 
+    print("\nAverage waiting time = %.5f "%(total_wt /n) )
+    print("Average turn around time = %.5f "% (total_tat / n))
+     
+# Driver code
+if __name__ =="__main__":
+     
+    # Process id's
+    proc = [1, 2, 3]
+    n = 3
+ 
+    # Burst time of all processes
+    burst_time = [10, 5, 8]
+ 
+    # Time quantum
+    quantum = 2
+    findavgTime(proc, n, burst_time, quantum)

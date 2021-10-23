@@ -1,4 +1,3 @@
-import pandas as pd
 import numpy as np
 import csv
 from assgnopts import *
@@ -26,12 +25,6 @@ te = np.zeros((len(chars[:abc.ans]),)).tolist()
 ti = ti.array
 t = t.array
 
-# Update chart
-data = {}
-def update():
-    for idx,x in enumerate(chars[:abc.ans]):
-        data[x] = [t[idx],ti[idx],tf[idx],te[idx]]
-update()
 
 # Calculate tf with quantum and ti copy to know wich is first
 current = ti.copy()
@@ -76,9 +69,14 @@ for idx,k in enumerate(ti):
 
 # Reverse table and update chart
 table = table[::-1]
-update()
-print(pd.DataFrame(data))
-print("0:t,1:ti,2:tf,3:te")
+
+print("Processes    Burst Time(ti)     Final Time(TF)    Waiting(te)",
+                     "Time(t)    Turn-Around Time(te+t)")
+for i in range(len(chars[:abc.ans])): 
+        print(" ", chars[:abc.ans][i], "\t\t", ti[i],
+              "\t\t", tf[i], "\t\t", te[i], "\t\t",t[i], "\t\t",te[i]+t[i])
+#print("\nAverage waiting time = %.5f "%(total_wt /n) )
+#print("Average turn around time = %.5f "% (total_tat / n))
 # Convert to int
 print(table.astype(int))
 
