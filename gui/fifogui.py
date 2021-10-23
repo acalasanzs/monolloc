@@ -1,38 +1,41 @@
+from numpy.core.shape_base import block
 import pygame
-import pandas as pd
 import numpy as np
 import csv
 from assgnopts import *
-import string
 print("First Input First Output")
 "There's an errror with self.vals that return 0 array"
 
+def colnum_string(n):
+    string = ""
+    while n > 0:
+        n, remainder = divmod(n - 1, 26)
+        string = chr(65 + remainder) + string
+    return string
 # Get ABCDEFGH...
-chars = [x for x in string.ascii_uppercase]
+chars = []
 
 # Set values of inputs
 
-abc = Assgn(Ar2Dict(["cuants procesos (max: 26)"],"units"),vals=range(1,27),rules=[False,False,True])
+abc = Assgn(Ar2Dict(["cuants procesos (max: 1000)"],"units"),vals=range(1,1001),rules=[False,False,True])
 abc.input()
-t = Assgn(Ar2Dict(chars[:abc.ans],"t"),conj="com a",rules=[False,False,True])
+
+for o in range(1,abc.ans+1):
+    chars.append(colnum_string(o))
+
+t = Assgn(Ar2Dict(chars,"t"),conj="com a",rules=[False,False,True])
 t.input()
-ti = Assgn(Ar2Dict(chars[:abc.ans],"ti"),conj="com a",rules=[True,False,True])
+ti = Assgn(Ar2Dict(chars,"ti"),conj="com a",rules=[True,False,True])
 ti.input()
 
 # Set tf and te to 0
-tf = np.zeros((len(chars[:abc.ans]),)).tolist()
-te = np.zeros((len(chars[:abc.ans]),)).tolist()
+tf = np.zeros((abc.ans,)).tolist()
+te = np.zeros((abc.ans,)).tolist()
 
 # Simplify
 ti = ti.array
 t = t.array
 
-# Update chart
-data = {}
-def update():
-    for idx,x in enumerate(chars[:abc.ans]):
-        data[x] = [t[idx],ti[idx],tf[idx],te[idx]]
-update()
 
 # Calculate tf with quantum and ti copy to know wich is first
 current = ti.copy()
@@ -44,7 +47,7 @@ for idx,x in enumerate(ti):
     current.remove(first)
 
 # Make a 2D chart of 0 of length sum(t)
-table = np.zeros((len(chars[:abc.ans]),sum(t)))
+table = np.zeros((abc.ans,sum(t)))
 tabley = 0
 current = ti.copy()
 print(" | ".join([str(tuple(a)) for a in zip(ti,tf)]))
@@ -77,9 +80,14 @@ for idx,k in enumerate(ti):
 
 # Reverse table and update chart
 table = table[::-1]
-update()
-print(pd.DataFrame(data))
-print("0:t,1:ti,2:tf,3:te")
+
+print("Processes    Burst Time(ti)     Final Time(TF)    Waiting(te)",
+                     "Time(t)    Turn-Around Time(te+t)")
+for i in range(abc.ans): 
+        print(" ", chars[i], "\t\t", ti[i],
+              "\t\t", tf[i], "\t\t   ", te[i], "\t",t[i], "\t\t",te[i]+t[i])
+print("\nAverage waiting time = %.5f "%(te[i] /abc.ans) )
+print("Average turn around time = %.5f "% (te[i]+t[i] / abc.ans))
 # Convert to int
 print(table.astype(int))
 
@@ -128,7 +136,8 @@ def drawGrid():
             rect = pygame.Rect(x, y, blockSize, blockSize)
             pygame.draw.rect(screen, color, rect)
             # Draw square border
-            pygame.draw.rect(screen, (255,255,255), rect, 1)
+            if blockSize > 15:
+                pygame.draw.rect(screen, (255,255,255), rect, 1)
 
 while True:
     dif = screen.get_width()/table.shape[0]

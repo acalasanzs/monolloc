@@ -1,25 +1,34 @@
 import numpy as np
 import csv
 from assgnopts import *
-import string
 print("First Input First Output")
 "There's an errror with self.vals that return 0 array"
 
+def colnum_string(n):
+    string = ""
+    while n > 0:
+        n, remainder = divmod(n - 1, 26)
+        string = chr(65 + remainder) + string
+    return string
 # Get ABCDEFGH...
-chars = [x for x in string.ascii_uppercase]
+chars = []
 
 # Set values of inputs
 
-abc = Assgn(Ar2Dict(["cuants procesos (max: 26)"],"units"),vals=range(1,27),rules=[False,False,True])
+abc = Assgn(Ar2Dict(["cuants procesos (max: 1000)"],"units"),vals=range(1,1001),rules=[False,False,True])
 abc.input()
-t = Assgn(Ar2Dict(chars[:abc.ans],"t"),conj="com a",rules=[False,False,True])
+
+for o in range(1,abc.ans+1):
+    chars.append(colnum_string(o))
+
+t = Assgn(Ar2Dict(chars,"t"),conj="com a",rules=[False,False,True])
 t.input()
-ti = Assgn(Ar2Dict(chars[:abc.ans],"ti"),conj="com a",rules=[True,False,True])
+ti = Assgn(Ar2Dict(chars,"ti"),conj="com a",rules=[True,False,True])
 ti.input()
 
 # Set tf and te to 0
-tf = np.zeros((len(chars[:abc.ans]),)).tolist()
-te = np.zeros((len(chars[:abc.ans]),)).tolist()
+tf = np.zeros((abc.ans,)).tolist()
+te = np.zeros((abc.ans,)).tolist()
 
 # Simplify
 ti = ti.array
@@ -36,7 +45,7 @@ for idx,x in enumerate(ti):
     current.remove(first)
 
 # Make a 2D chart of 0 of length sum(t)
-table = np.zeros((len(chars[:abc.ans]),sum(t)))
+table = np.zeros((abc.ans,sum(t)))
 tabley = 0
 current = ti.copy()
 print(" | ".join([str(tuple(a)) for a in zip(ti,tf)]))
@@ -72,11 +81,11 @@ table = table[::-1]
 
 print("Processes    Burst Time(ti)     Final Time(TF)    Waiting(te)",
                      "Time(t)    Turn-Around Time(te+t)")
-for i in range(len(chars[:abc.ans])): 
-        print(" ", chars[:abc.ans][i], "\t\t", ti[i],
-              "\t\t", tf[i], "\t\t", te[i], "\t\t",t[i], "\t\t",te[i]+t[i])
-#print("\nAverage waiting time = %.5f "%(total_wt /n) )
-#print("Average turn around time = %.5f "% (total_tat / n))
+for i in range(abc.ans): 
+        print(" ", chars[i], "\t\t", ti[i],
+              "\t\t", tf[i], "\t\t   ", te[i], "\t",t[i], "\t\t",te[i]+t[i])
+print("\nAverage waiting time = %.5f "%(te[i] /abc.ans) )
+print("Average turn around time = %.5f "% (te[i]+t[i] / abc.ans))
 # Convert to int
 print(table.astype(int))
 
