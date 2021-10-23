@@ -4,6 +4,8 @@ import numpy as np
 import csv
 from assgnopts import *
 import string
+print("Short Job First")
+"There's an errror with self.vals that return 0 array"
 
 chars = [x for x in string.ascii_uppercase]
 
@@ -16,33 +18,42 @@ ti.input()
 
 tf = np.zeros((len(chars[:abc.ans]),)).tolist()
 te = np.zeros((len(chars[:abc.ans]),)).tolist()
-
+""" process = np.array(chars[:abc.ans]).reshape(len(chars[:abc.ans]),1)
+print(process) """
 ti = ti.array
 t = t.array
-
 data = {}
 def update():
     for idx,x in enumerate(chars[:abc.ans]):
         data[x] = [t[idx],ti[idx],tf[idx],te[idx]]
 update()
 dt = pd.DataFrame(data)
-
+print(dt)
+print("0:t,1:ti,2:tf,3:te")
+print("Zeros are x")
 current = ti.copy()
-quantum = -1
+quantum = 0
 for idx,x in enumerate(ti):
     first = min(current)
     tf[ti.index(first)] = quantum + t[ti.index(first)]
     quantum += t[ti.index(first)]
     current.remove(first)
+    #del current[ti.index(first)]
+tf = [int(a) for a in tf]
 table = np.zeros((len(chars[:abc.ans]),sum(t)))
 tabley = 0
 current = ti.copy()
-# print(" | ".join([str(tuple(a)) for a in zip(ti,tf)]))
-
+ranges = [tuple(a) for a in zip(ti,tf)]
+print(" | ".join([str(a) for a in ranges]))
+print(tf)
 for idx,k in enumerate(ti):
-    first = (min(current),tf[ti.index(min(current))])
-    tablex = first[0]
-    for x in range(first[0],first[1]+1):
+    minu = []
+    for rang in ranges:
+        minu.append(len(range(rang[0],rang[1])))
+    first2 = min(minu)
+    tablex = ranges[[len(range(x[0],x[1])) for x in ranges].index(first2)][0]
+    print(range(ranges[[len(range(x[0],x[1])) for x in ranges].index(first2)][0],ranges[[len(range(x[0],x[1])) for x in ranges].index(first2)][1]))
+    for x in range(ranges[[len(range(x[0],x[1])) for x in ranges].index(first2)][0],ranges[[len(range(x[0],x[1])) for x in ranges].index(first2)][1]):
         try:
             assert table[tabley-1][tablex] in (1,2)
             table[tabley][tablex] = 2
@@ -55,7 +66,7 @@ for idx,k in enumerate(ti):
         tablex += 1
     else:
         tabley += 1
-    current.remove(min(current))
+    ranges.remove(ranges[[len(range(x[0],x[1])) for x in ranges].index(first2)])
 
 
 table = table[::-1]
@@ -76,8 +87,8 @@ pygame.font.init()
 screen = pygame.display.set_mode((1000, 600), pygame.RESIZABLE)
 
 # Title and Icon
-pygame.display.set_caption("FIFO SOLVER")
-img = pygame.image.load('fifo.jpg')
+pygame.display.set_caption("SJF SOLVER")
+img = pygame.image.load('global.jpg')
 pygame.display.set_icon(img)
 
 run = True
