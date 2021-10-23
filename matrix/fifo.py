@@ -18,7 +18,7 @@ chars = []
 abc = Assgn(Ar2Dict(["cuants procesos (max: 1000)"],"units"),vals=range(1,1001),rules=[False,False,True])
 abc.input()
 
-for o in range(1,abc.ans+1):
+for o in range(1,abc.ans):
     chars.append(colnum_string(o))
 
 t = Assgn(Ar2Dict(chars,"t"),conj="com a",rules=[False,False,True])

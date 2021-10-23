@@ -6,24 +6,35 @@ import string
 print("Short Job First")
 "There's an errror with self.vals that return 0 array"
 
-chars = [x for x in string.ascii_uppercase]
+def colnum_string(n):
+    string = ""
+    while n > 0:
+        n, remainder = divmod(n - 1, 26)
+        string = chr(65 + remainder) + string
+    return string
+# Get ABCDEFGH...
+chars = []
 
 abc = Assgn(Ar2Dict(["cuants procesos (max: 26)"],"units"),vals=range(1,27),rules=[False,False,True])
 abc.input()
-t = Assgn(Ar2Dict(chars[:abc.ans],"t"),conj="com a",rules=[False,False,True])
+
+for o in range(1,abc.ans):
+    chars.append(colnum_string(o))
+
+t = Assgn(Ar2Dict(chars,"t"),conj="com a",rules=[False,False,True])
 t.input()
-ti = Assgn(Ar2Dict(chars[:abc.ans],"ti"),conj="com a",rules=[True,False,True])
+ti = Assgn(Ar2Dict(chars,"ti"),conj="com a",rules=[True,False,True])
 ti.input()
 
-tf = np.zeros((len(chars[:abc.ans]),)).tolist()
-te = np.zeros((len(chars[:abc.ans]),)).tolist()
-""" process = np.array(chars[:abc.ans]).reshape(len(chars[:abc.ans]),1)
+tf = np.zeros((abc.ans,)).tolist()
+te = np.zeros((abc.ans,)).tolist()
+""" process = np.array(chars).reshape(len(chars),1)
 print(process) """
 ti = ti.array
 t = t.array
 data = {}
 def update():
-    for idx,x in enumerate(chars[:abc.ans]):
+    for idx,x in enumerate(chars):
         data[x] = [t[idx],ti[idx],tf[idx],te[idx]]
 update()
 dt = pd.DataFrame(data)
@@ -39,7 +50,7 @@ for idx,x in enumerate(ti):
     current.remove(first)
     #del current[ti.index(first)]
 tf = [int(a) for a in tf]
-table = np.zeros((len(chars[:abc.ans]),sum(t)))
+table = np.zeros((abc.ans,sum(t)))
 tabley = 0
 current = ti.copy()
 ranges = [tuple(a) for a in zip(ti,tf)]
