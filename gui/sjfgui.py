@@ -112,21 +112,23 @@ def drawGrid():
     global blockSize
     blockSize = int(150/table.shape[0]) #Set the size of the grid block
     while screen.get_width() % blockSize > 0:
-        blockSize -= 1
+        blockSize -= 1  # Make it fit the grid
     for x in range(0, screen.get_width(), blockSize):
         for y in range(0, screen.get_height(), blockSize):
             try:
                 assert table[int(y/blockSize)][int(x/blockSize)] == 1
-                color = (0, 184, 148)
+                color = (0, 184, 148)   # If 1 color green
             except:
                 try:
                     assert table[int(y/blockSize)][int(x/blockSize)] == 2
-                    color = (225, 112, 85)
+                    color = (225, 112, 85) # If 2 color red
                 except:
-                    color = (25,25,25)
+                    color = (25,25,25) # Else color black
             rect = pygame.Rect(x, y, blockSize, blockSize)
             pygame.draw.rect(screen, color, rect)
-            pygame.draw.rect(screen, (255,255,255), rect, 1)
+            # Draw square border
+            if blockSize > 15:
+                pygame.draw.rect(screen, (255,255,255), rect, 1)
 
 while True:
     dif = screen.get_width()/table.shape[0]
