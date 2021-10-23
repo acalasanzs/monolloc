@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 import csv
 from assgnopts import *
-import string
 print("Short Job First")
 "There's an errror with self.vals that return 0 array"
 
