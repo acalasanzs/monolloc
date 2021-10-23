@@ -21,7 +21,7 @@ abc.input()
 for o in range(1,abc.ans+1):
     chars.append(colnum_string(o))
 
-quantum = Assgn(Ar2Dict(["cuants procesos (max: 1000)"],"units"),vals=range(1,1001),rules=[False,False,True],ui=False)
+quantum = Assgn(Ar2Dict(["quantum"],"units"),vals=range(1,1001),rules=[False,False,True],ui=False)
 quantum.input()
 quantum = quantum.ans
 
@@ -54,13 +54,21 @@ tabley = 0
 current = ti.copy()
 print(" | ".join([str(tuple(a)) for a in zip(ti,tf)]))
 
-# Calculate wait or run
-for idx,k in enumerate(ti):
-    # The first is wich is min TI and and its tf
-    first = (min(current),tf[ti.index(min(current))])
-    # Index of current x for chart is first[0]
-    tablex = first[0]
+def AnyGreaterThan(a,list):
+    for x in list:
+        if x > a:
+            return True
+def matrix(first):
+    timer = 0
+    global tabley, tablex, idx
     for x in range(first[0],first[1]+1):
+        timer += 1
+        print(memory)
+        if timer > quantum and not AnyGreaterThan(0,[len(range(x[0],x[1]+1)) for x in memory[idx] for idx,a in range(len(memory))]):
+            tabley += 1
+            break
+        print(tablex,quantum)
+        memory[idx] = (x,first[1])
         try:
             # if (x-1,y) is 1 or 2
             assert table[tabley-1][tablex] in (1,2)
@@ -75,10 +83,21 @@ for idx,k in enumerate(ti):
                 # If the above code bounds the limits here breaks loop
                 break
         tablex += 1
-    else:
-        tabley += 1
+idx = 0
+# Calculate wait or run
+tabley = 0
+for idx,k in enumerate(ti):
+    idx = idx
+    memory = {}
+    # The first is wich is min TI and and its tf
+    first = (min(current),tf[ti.index(min(current))])
+    # Index of current x for chart is first[0]
+    tablex = first[0]
+    
+    matrix(first)
     # remove from temp
     current.remove(min(current))
+    print(memory)
 
 # Reverse table and update chart
 table = table[::-1]
