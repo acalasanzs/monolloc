@@ -71,7 +71,6 @@ def findWaitingTime(n, bt,
                 done = False # There is a pending process
                  
                 if (rem_bt[i] > quantum) :
-                    i2table.append(1)
                     # Increase the value of t i.e. shows
                     # how much time a process has been processed
                     t += quantum
@@ -79,16 +78,17 @@ def findWaitingTime(n, bt,
                     # Decrease the burst_time of current
                     # process by quantum
                     rem_bt[i] -= quantum
+                    for _ in range(quantum):
+                        i2table.append(1)
                     
                  
                 # If burst time is smaller than or equal 
                 # to quantum. Last cycle for this process
                 else:
-                    i2table.append(2)
+                    a = rem_bt[i]
                     # Increase the value of t i.e. shows
                     # how much time a process has been processed
                     t = t + rem_bt[i]
- 
                     # Waiting time is current time minus
                     # time used by this process
                     wt[i] = t - bt[i]
@@ -96,9 +96,10 @@ def findWaitingTime(n, bt,
                     # As the process gets fully executed
                     # make its remaining burst time = 0
                     rem_bt[i] = 0
+                    for i in range(a):
+                        i2table.append(2)
         else:
             i3table.append(i2table)
-            i2table = []
                  
         # If all processes are done
         if (done == True):
@@ -127,20 +128,17 @@ current = ti.copy()
 print(" | ".join([str(tuple(a)) for a in zip(ti,tf)]))
 
 # Calculate wait or run
-for idx,k in enumerate(ti):
+count = 0
+for idx,k in enumerate(i3table):
     # The first is wich is min TI and and its tf
-    first = (min(current),int(tf[ti.index(min(current))]))
-    count = 0
-    # Index of current x for chart is first[0]
-    for x in range(first[0],first[1]+1):
+    for x in range(len(i3table[idx])):
+        # Index of current x for chart is first[0]
         try:
-            print(i3table[idx][count])
-            table[idx][count] = i3table[idx][count]
-            count += 1
+            table[idx][count] = i3table[idx][x]
+            if i3table[idx][x] == 1:
+                count +=1
         except:
-            count += 1
-    # remove from temp
-    current.remove(min(current))
+            break
 
 # Reverse table and update chart
 table = table[::-1]
