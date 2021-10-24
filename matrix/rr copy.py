@@ -20,7 +20,6 @@ abc.input()
 
 for o in range(1,abc.ans+1):
     chars.append(colnum_string(o))
-
 quantum = Assgn(Ar2Dict(["quantum"],"units"),vals=range(1,1001),rules=[False,False,True],ui=False)
 quantum.input()
 quantum = quantum.ans
@@ -31,73 +30,117 @@ ti = Assgn(Ar2Dict(chars,"ti"),conj="com a",rules=[True,False,True])
 ti.input()
 
 # Set tf and te to 0
-tf = np.zeros((abc.ans,)).tolist()
-te = np.zeros((abc.ans,)).tolist()
+tf = [0] * abc.ans
+te = [0] * abc.ans
 
 # Simplify
 ti = ti.array
 t = t.array
 
 
-# Calculate tf with quantum and ti copy to know wich is first
-current = ti.copy()
-quant = -1
-for idx,x in enumerate(ti):
-    first = min(current)
-    tf[ti.index(first)] = quant + t[ti.index(first)]
-    quant += t[ti.index(first)]
-    current.remove(first)
+
+
+
+
+
+
+def findWaitingTime(n, bt,
+                         wt, quantum):
+    global i3table
+    i3table = []
+    rem_bt = [0] * n
+    # Copy the burst time into rt[]
+    for i in range(n):
+        rem_bt[i] = bt[i]
+    t = 0 # Current time
+ 
+    # Keep traversing processes in round
+    # robin manner until all of them are
+    # not done.
+    while(1):
+        done = True
+        i2table = []
+ 
+        # Traverse all processes one by
+        # one repeatedly
+        for i in range(n):
+             
+            # If burst time of a process is greater
+            # than 0 then only need to process further
+            if (rem_bt[i] > 0) :
+                done = False # There is a pending process
+                 
+                if (rem_bt[i] > quantum) :
+                    i2table.append(1)
+                    # Increase the value of t i.e. shows
+                    # how much time a process has been processed
+                    t += quantum
+ 
+                    # Decrease the burst_time of current
+                    # process by quantum
+                    rem_bt[i] -= quantum
+                    
+                 
+                # If burst time is smaller than or equal 
+                # to quantum. Last cycle for this process
+                else:
+                    i2table.append(2)
+                    # Increase the value of t i.e. shows
+                    # how much time a process has been processed
+                    t = t + rem_bt[i]
+ 
+                    # Waiting time is current time minus
+                    # time used by this process
+                    wt[i] = t - bt[i]
+ 
+                    # As the process gets fully executed
+                    # make its remaining burst time = 0
+                    rem_bt[i] = 0
+        else:
+            i3table.append(i2table)
+            i2table = []
+                 
+        # If all processes are done
+        if (done == True):
+            break
+             
+# Function to calculate turn around time
+def findTurnAroundTime(n, bt, wt, tat):
+     
+    # Calculating turnaround time
+    for i in range(n):
+        tat[i] = bt[i] + wt[i]
+
+
+
+
+
+
+findWaitingTime(abc.ans,ti,te,quantum)
+findTurnAroundTime(abc.ans,ti,te,tf)
+print(i3table)
+
 
 # Make a 2D chart of 0 of length sum(t)
 table = np.zeros((abc.ans,sum(t)))
-tabley = 0
 current = ti.copy()
 print(" | ".join([str(tuple(a)) for a in zip(ti,tf)]))
 
-def AnyGreaterThan(a,list):
-    for x in list:
-        if x > a:
-            return True
-def matrix(first):
-    timer = 0
-    global tabley, tablex, idx
-    for x in range(first[0],first[1]+1):
-        timer += 1
-        print(memory)
-        if timer > quantum and not AnyGreaterThan(0,[len(range(x[0],x[1]+1)) for x in memory[idx] for idx,a in range(len(memory))]):
-            tabley += 1
-            break
-        print(tablex,quantum)
-        memory[idx] = (x,first[1])
-        try:
-            # if (x-1,y) is 1 or 2
-            assert table[tabley-1][tablex] in (1,2)
-            # Convert (x,y) to 2
-            table[tabley][tablex] = 2
-            # Add to wait number
-            te[idx] += 1
-        except:
-            try:
-                table[tabley][tablex] = 1
-            except IndexError:
-                # If the above code bounds the limits here breaks loop
-                break
-        tablex += 1
-idx = 0
 # Calculate wait or run
-tabley = 0
 for idx,k in enumerate(ti):
-    idx = idx
-    memory = {}
     # The first is wich is min TI and and its tf
-    first = (min(current),tf[ti.index(min(current))])
+    first = (min(current),int(tf[ti.index(min(current))]))
+    count = 0
     # Index of current x for chart is first[0]
-    tablex = first[0]
-    
-    matrix(first)
+    for x in range(first[0],first[1]+1):
+        try:
+            print(i3table[idx][count])
+            table[idx][count] = i3table[idx][count]
+            count += 1
+        except:
+            count += 1
     # remove from temp
     current.remove(min(current))
-    print(memory)
 
 # Reverse table and update chart
 table = table[::-1]
