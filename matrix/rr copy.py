@@ -126,7 +126,10 @@ print(i3table)
 table = np.zeros((abc.ans,sum(t)))
 current = ti.copy()
 print(" | ".join([str(tuple(a)) for a in zip(ti,tf)]))
-
+def AnyGreaterThan(a,ar):
+    for x in ar:
+        if a > x:
+            return True
 # Calculate wait or run
 count = 0
 for idx,k in enumerate(i3table):
@@ -134,6 +137,8 @@ for idx,k in enumerate(i3table):
     for x in range(len(i3table[idx])):
         # Index of current x for chart is first[0]
         try:
+            if table[idx-1][count] == 0:
+                i3table[idx][x] = 1
             table[idx][count] = i3table[idx][x]
             if i3table[idx][x] == 1:
                 count +=1
