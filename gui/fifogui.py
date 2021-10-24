@@ -28,8 +28,8 @@ ti = Assgn(Ar2Dict(chars,"ti"),conj="com a",rules=[True,False,True])
 ti.input()
 
 # Set tf and te to 0
-tf = np.zeros((abc.ans,)).tolist()
-te = np.zeros((abc.ans,)).tolist()
+tf = [0] * abc.ans
+te = [0] * abc.ans
 
 # Simplify
 ti = ti.array
@@ -56,24 +56,20 @@ for idx,k in enumerate(ti):
     # The first is wich is min TI and and its tf
     first = (min(current),tf[ti.index(min(current))])
     # Index of current x for chart is first[0]
-    tablex = first[0]
     for x in range(first[0],first[1]+1):
         try:
             # if (x-1,y) is 1 or 2
-            assert table[tabley-1][tablex] in (1,2)
+            assert table[idx-1][x] in (1,2)
             # Convert (x,y) to 2
-            table[tabley][tablex] = 2
+            table[idx][x] = 2
             # Add to wait number
             te[idx] += 1
         except:
             try:
-                table[tabley][tablex] = 1
+                table[idx][x] = 1
             except IndexError:
                 # If the above code bounds the limits here breaks loop
                 break
-        tablex += 1
-    else:
-        tabley += 1
     # remove from temp
     current.remove(min(current))
 

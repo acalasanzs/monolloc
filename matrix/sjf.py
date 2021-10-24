@@ -25,8 +25,8 @@ t.input()
 ti = Assgn(Ar2Dict(chars,"ti"),conj="com a",rules=[True,False,True])
 ti.input()
 
-tf = np.zeros((abc.ans,)).tolist()
-te = np.zeros((abc.ans,)).tolist()
+tf = [0] * abc.ans
+te = [0] * abc.ans
 """ process = np.array(chars).reshape(len(chars),1)
 print(process) """
 ti = ti.array

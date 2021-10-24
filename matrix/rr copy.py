@@ -115,9 +115,7 @@ def findTurnAroundTime(n, bt, wt, tat):
 
 
 
-
-
-findWaitingTime(abc.ans,ti,te,quantum)
+#findWaitingTime(abc.ans,ti,te,quantum)
 findTurnAroundTime(abc.ans,ti,te,tf)
 print(i3table)
 
