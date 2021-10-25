@@ -56,7 +56,8 @@ def AnyGreaterThan(a,ar):
     for x in ar:
         if a > x:
             return True
-
+quant = [0] * abc.ans
+save = False
 # Calculate wait or run
 for idx,k in enumerate(ti):
     # The first is wich is min TI and and its tf
@@ -66,36 +67,42 @@ for idx,k in enumerate(ti):
     for x in range(first[0],first[1]+1):
         count += 1
         try:
-            table[idx][x] = 1
+            column = [0] * abc.ans
+            for h in range(abc.ans):
+                column[h] = table[h][x]
+            quant[idx] = count
+            if count > quantum:
+                if not any([True*a for a in column]):
+                    count = 0
+                temporal = quant.copy()
+                temporal.pop(idx)
+                print(temporal)
+                if not save:
+                    if any([True*a for a in temporal]):
+                        count += 2
+                    if AnyGreaterThan(1,column):
+                        count = 0
+                        save = True
+                else:
+                    if any([True*a for a in temporal]):
+                        count = 0
+                    if AnyGreaterThan(1,column):
+                        count += 2
+                        save = False
+            if any([True*a for a in column]):
+                table[idx][x] = 2
+            else:
+                if count > quantum:
+                    table[idx][x] = 2
+                else:
+                    table[idx][x] = 1
         except IndexError:
             # If the above code bounds the limits here breaks loop
             break
     # remove from temp
     current.remove(min(current))
+print(quant)
 
-def revision():
-    quant = [0] * abc.ans
-    for x in range(table.shape[1]):
-        for i in range(abc.ans):
-            if table[i][x] == 1:
-                quant[i] += 1
-            try:
-                if table[i+1][x-1] == 2 or table[i-1][x-1] == 2 or table[i][x-1] == 2:
-                    if table[i+1][x] == 1 and quant[i] > 1 and table[i][x] == 1:
-                        table[i][x] = 2
-                        quant[i] -= 1
-                    elif table[i-1][x] == 1 and quant[i] > 1 and table[i][x] == 1:
-                        table[i][x] = 1
-                else:
-                    if table[i+1][x] == 1 and quant[i] > 1 and table[i][x] == 1:
-                        table[i][x] = 1
-                        quant[i] += 1
-                    elif table[i-1][x] == 1 and quant[i] > 1 and table[i][x] == 1:
-                        table[i][x] = 2
-            except:
-                break
-    print(quant)
-revision()
 # Reverse table and update chart
 table = table[::-1]
 
