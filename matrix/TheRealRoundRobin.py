@@ -18,7 +18,7 @@ def inputs():
 
     abc = Assgn(Ar2Dict(["cuants procesos"],"units"),vals=range(1,1001),rules=[False,False,True],ui=False)
     abc.input()
-    quantum = 2
+    quantum = 1
     for o in range(1,abc.ans+1):
         chars.append(colnum_string(o))
 
@@ -48,11 +48,9 @@ def minval(array):
     arr = array.copy()
     while 0 in arr:
         arr.remove(0)
+    if len(arr) == 0:
+        return False
     return min(arr)
-
-
-
-
 
 def QTable():
     global quantum_table
@@ -89,7 +87,40 @@ def QTable():
         # remove from temp
         current.remove(min(current))
 
+def UpdateQuantum():
+    global quantum_table
+    # Calculate tf with quantum and ti copy to know wich is first
+    current = ti.copy()
+    time = -1
+    for idx,x in enumerate(ti):
+        first = min(current)
+        tf[ti.index(first)] = time + t[ti.index(first)]
+        time += t[ti.index(first)]
+        current.remove(first)
+    current = ti.copy()
+    quant = [0] * abc.ans
+    # Calculate wait or run
+    for idx,k in enumerate(ti):
+        # The first is wich is min TI and and its tf
+        count = 0
+        first = (min(current),tf[ti.index(min(current))])
+        # Index of current x for chart is first[0]
+        for x in range(first[0],first[1]+1):
+            count += 1/quantum
+            quant[idx] = count
+            try:
+                if quantum_table[idx][x] == -1:
+                    count = 0
+                    quantum_table[idx][x] = 1/quantum
+                else:
+                    quantum_table[idx][x] = quant[idx]
+            except IndexError:
+                # If the above code bounds the limits here breaks loop
+                break
+        # remove from temp
+        current.remove(min(current))
 def Table():
+    global table
     # Make a 2D chart of 0 of length sum(t)
     table = np.zeros((abc.ans,sum(t)))
     current = ti.copy()
@@ -103,14 +134,25 @@ def Table():
         for x in range(first[0],first[1]+1):
             try:
                 quantum_column = column(quantum_table,x)
-                print(minval(quantum_column))
+                if minval(quantum_column):
+                    if quantum_table[idx][x] <= quantum:
+                        table[idx][x] = 1
+                    else:
+                        if minval(quantum_column) == quantum_table[idx][x]:
+                            table[idx][x] = 1
+                            quantum_table[idx][x] = -1
+                            UpdateQuantum()
+                            for h in range(len(quantum_column)):
+                                if table[h][x] == 1:
+                                    table[h][x] = 2
+                                    table[idx][x] = 1
+                        else:
+                            table[idx][x] = 2
             except IndexError as err:
-                table[1][x] = 1
                 # If the above code bounds the limits here breaks loop
                 break
         # remove from temp
         current.remove(min(current))
-    return table
 
 
 
@@ -122,9 +164,10 @@ def Table():
 if __name__ == "__main__":
     inputs()
     QTable()
+    Table()
 
     # Reverse table and update chart
-    table = Table()[::-1]
+    table = table[::-1]
     quantum_table = quantum_table[::-1]
 
     total = np.array([table,quantum_table])
