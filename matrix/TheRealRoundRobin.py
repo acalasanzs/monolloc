@@ -35,6 +35,22 @@ ti = ti.array
 t = t.array
 
 
+
+def column(table,x):
+    column = [0] * table.shape[0]
+    for h in range(len(column)):
+        column[h] = table[h][x]
+    return column
+
+
+
+
+
+
+
+
+
+
 # Calculate tf with quantum and ti copy to know wich is first
 current = ti.copy()
 time = -1
@@ -54,8 +70,12 @@ for idx,k in enumerate(ti):
     first = (min(current),tf[ti.index(min(current))])
     # Index of current x for chart is first[0]
     for x in range(first[0],first[1]+1):
-        count +=1/quantum
-        quant[idx] = int(count)
+        count += 1/quantum
+        """ if int(count) < 1:
+            quant[idx] = 1
+        else:
+            quant[idx] = int(count) """
+        quant[idx] = count
         try:
             quantum_table[idx][x] = quant[idx]
         except IndexError:
@@ -78,15 +98,14 @@ for idx,k in enumerate(ti):
     # Index of current x for chart is first[0]
     for x in range(first[0],first[1]+1):
         try:
-            table[idx][x] = 1
+            quantum_column = column(quantum_table,x)
+            print(quantum_column,quantum_column.index(min(quantum_column)))
+            table[quantum_column.index(min(quantum_column))-1][x] = 1
         except IndexError:
             # If the above code bounds the limits here breaks loop
             break
     # remove from temp
     current.remove(min(current))
-
-
-
 
 
 
@@ -132,7 +151,7 @@ print("\nAverage waiting time = %.5f "%(te[i] /abc.ans) )
 print("Average turn around time = %.5f "% (te[i]+t[i] / abc.ans))
 # Convert to int
 #print(table.astype(int))
-print(total.astype(int))
+print(total.astype(float))
 # Save as csv
 with open('data.csv', mode='w',newline='') as file:
     file = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
