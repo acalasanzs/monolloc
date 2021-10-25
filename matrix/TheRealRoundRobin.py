@@ -17,7 +17,7 @@ chars = []
 
 abc = Assgn(Ar2Dict(["cuants procesos"],"units"),vals=range(1,1001),rules=[False,False,True],ui=False)
 abc.input()
-
+quantum = 2
 for o in range(1,abc.ans+1):
     chars.append(colnum_string(o))
 
@@ -44,6 +44,27 @@ for idx,x in enumerate(ti):
     time += t[ti.index(first)]
     current.remove(first)
 
+quantum_table = np.zeros((abc.ans,sum(t)))
+current = ti.copy()
+quant = [0] * abc.ans
+# Calculate wait or run
+for idx,k in enumerate(ti):
+    # The first is wich is min TI and and its tf
+    count = 0
+    first = (min(current),tf[ti.index(min(current))])
+    # Index of current x for chart is first[0]
+    for x in range(first[0],first[1]+1):
+        count +=1/quantum
+        quant[idx] = int(count)
+        try:
+            quantum_table[idx][x] = quant[idx]
+        except IndexError:
+            # If the above code bounds the limits here breaks loop
+            break
+    # remove from temp
+    current.remove(min(current))
+
+
 # Make a 2D chart of 0 of length sum(t)
 table = np.zeros((abc.ans,sum(t)))
 tabley = 0
@@ -58,26 +79,6 @@ for idx,k in enumerate(ti):
     for x in range(first[0],first[1]+1):
         try:
             table[idx][x] = 1
-        except IndexError:
-            # If the above code bounds the limits here breaks loop
-            break
-    # remove from temp
-    current.remove(min(current))
-
-quantum_table = np.zeros((abc.ans,sum(t)))
-current = ti.copy()
-quant = [0] * abc.ans
-# Calculate wait or run
-for idx,k in enumerate(ti):
-    # The first is wich is min TI and and its tf
-    count = 0
-    first = (min(current),tf[ti.index(min(current))])
-    # Index of current x for chart is first[0]
-    for x in range(first[0],first[1]+1):
-        count +=1
-        quant[idx] = count
-        try:
-            table[idx][x] = quant[idx]
         except IndexError:
             # If the above code bounds the limits here breaks loop
             break
@@ -118,6 +119,9 @@ for idx,k in enumerate(ti):
 
 # Reverse table and update chart
 table = table[::-1]
+quantum_table = quantum_table[::-1]
+
+total = np.array([table,quantum_table])
 
 print("Processes    Burst Time(ti)     Final Time(TF)    Waiting(te)",
                      "Time(t)    Turn-Around Time(te+t)")
@@ -127,8 +131,8 @@ for i in range(abc.ans):
 print("\nAverage waiting time = %.5f "%(te[i] /abc.ans) )
 print("Average turn around time = %.5f "% (te[i]+t[i] / abc.ans))
 # Convert to int
-print(table.astype(int))
-
+#print(table.astype(int))
+print(total.astype(int))
 # Save as csv
 with open('data.csv', mode='w',newline='') as file:
     file = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
