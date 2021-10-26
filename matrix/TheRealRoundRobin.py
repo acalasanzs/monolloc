@@ -155,8 +155,6 @@ def Table():
                 if minval(quantum_column):
                     if minval(quantum_column) == quantum_table[idx][x]:
                         quantum_table[idx][x] = -1
-                        if minval(column(quantum_table,idx-quantum)) == minval(column(quantum_table,idx)):
-                            quantum_table[idx][x-1] += 100
                         #print(quantum_table[::-1])
                         """ for h in range(len(quantum_column)):
                             if table[h][x] == 1:
@@ -174,7 +172,7 @@ def Draw():
     # Calculate wait or run
     for y in range(table.shape[0]):
         for x in range(table.shape[1]):
-            pass
+            print(column(quantum_table,x))
 
 
 
@@ -185,7 +183,7 @@ if __name__ == "__main__":
     DefaultInputs()
     QTable()
     Table()
-
+    Draw()
     # Reverse table and update chart
     table = table[::-1]
     quantum_table = quantum_table[::-1]
@@ -196,7 +194,7 @@ if __name__ == "__main__":
                         "Time(t)    Turn-Around Time(te+t)")
     for i in range(abc.ans): 
             print(" ", chars[i], "\t\t", ti[i],
-                "\t\t", tf[i], "\t\t   ", te[i], "\t",t[i], "\t\t",te[i]+t[i])
+                "\t\t", tf[i], "\t\t   ", te[i], "\t\t",t[i], "\t\t",te[i]+t[i])
     print("\nAverage waiting time = %.5f "%(te[i] /abc.ans) )
     print("Average turn around time = %.5f "% (te[i]+t[i] / abc.ans))
     # Convert to int
