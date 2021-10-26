@@ -1,7 +1,7 @@
 import numpy as np
 import csv
 from assgnopts import *
-print(color.t.OKGREEN+"First Input First Output"+color.end)
+print(color.t.OKGREEN+"Round Robin Chart"+color.end)
 "There's an errror with self.vals that return 0 array"
 
 def colnum_string(n):
@@ -12,13 +12,31 @@ def colnum_string(n):
     return string
 # Get ABCDEFGH...
 chars = []
+def DefaultInputs():
+    global abc, t, ti , tf , te, quantum
+    abc = Assgn(Ar2Dict(["cuants procesos"],"units"),vals=range(1,1001),rules=[False,False,True],ui=False)
+    abc.ans = 3
+    quantum = 2
+    for o in range(1,abc.ans+1):
+        chars.append(colnum_string(o))
+
+    t = Assgn(Ar2Dict(chars,"t"),conj="com a",rules=[False,False,True])
+    t = [5,3,2]
+    ti = Assgn(Ar2Dict(chars,"ti"),conj="com a",rules=[True,False,True])
+    ti = [3,1,0]
+
+    # Set tf and te to 0
+    tf = [0] * abc.ans
+    te = [0] * abc.ans
 def inputs():
     global abc, t, ti , tf , te, quantum
     # Set values of inputs
 
     abc = Assgn(Ar2Dict(["cuants procesos"],"units"),vals=range(1,1001),rules=[False,False,True],ui=False)
     abc.input()
-    quantum = 1
+    quantum = Assgn(Ar2Dict(["quantum"],"units"),vals=range(1,1001),rules=[False,False,True],ui=False)
+    quantum.input()
+    quantum = quantum.ans
     for o in range(1,abc.ans+1):
         chars.append(colnum_string(o))
 
@@ -135,26 +153,28 @@ def Table():
             try:
                 quantum_column = column(quantum_table,x)
                 if minval(quantum_column):
-                    if quantum_table[idx][x] <= quantum:
-                        table[idx][x] = 1
-                    else:
-                        if minval(quantum_column) == quantum_table[idx][x]:
-                            table[idx][x] = 1
-                            quantum_table[idx][x] = -1
-                            UpdateQuantum()
-                            for h in range(len(quantum_column)):
-                                if table[h][x] == 1:
-                                    table[h][x] = 2
-                                    table[idx][x] = 1
-                        else:
-                            table[idx][x] = 2
+                    if minval(quantum_column) == quantum_table[idx][x]:
+                        quantum_table[idx][x] = -1
+                        if minval(column(quantum_table,idx-quantum)) == minval(column(quantum_table,idx)):
+                            quantum_table[idx][x-1] += 100
+                        #print(quantum_table[::-1])
+                        """ for h in range(len(quantum_column)):
+                            if table[h][x] == 1:
+                                table[h][x] = 2
+                                table[idx][x] = 1 """
+
             except IndexError as err:
                 # If the above code bounds the limits here breaks loop
                 break
+        UpdateQuantum()
         # remove from temp
         current.remove(min(current))
-
-
+def Draw():
+    global table
+    # Calculate wait or run
+    for y in range(table.shape[0]):
+        for x in range(table.shape[1]):
+            pass
 
 
 
@@ -162,7 +182,7 @@ def Table():
 
 
 if __name__ == "__main__":
-    inputs()
+    DefaultInputs()
     QTable()
     Table()
 
