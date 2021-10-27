@@ -155,7 +155,9 @@ def Table():
                 if minval(quantum_column):
                     if minval(quantum_column) == quantum_table[idx][x]:
                         quantum_table[idx][x] = -1
-                        if table[idx][x].where(minval(column(quantum_table,x)))
+                        # IF REPEATED
+                        if np.where(column(quantum_table,x-quantum) == minval(column(quantum_table,x-quantum)))[0][0] == np.where(column(quantum_table,x) == minval(column(quantum_table,x)))[0][0]:
+                            print("repeated",np.where(column(quantum_table,x) == minval(column(quantum_table,x)))[0][0])
                         #print(quantum_table[::-1])
                         """ for h in range(len(quantum_column)):
                             if table[h][x] == 1:
