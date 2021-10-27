@@ -155,6 +155,7 @@ def Table():
                 if minval(quantum_column):
                     if minval(quantum_column) == quantum_table[idx][x]:
                         quantum_table[idx][x] = -1
+                        if table[idx][x].where(minval(column(quantum_table,x)))
                         #print(quantum_table[::-1])
                         """ for h in range(len(quantum_column)):
                             if table[h][x] == 1:
