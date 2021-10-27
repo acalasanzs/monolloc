@@ -213,17 +213,18 @@ def Draw():
         # Index of current x for chart is first[0]
         for x in range(first[0],first[1]+1):
             try:
+                other = column(quantum_table,x)
+                other.remove(minval(other))
+
                 table[np.where(column(quantum_table,x) == minval(column(quantum_table,x)))[0][0]][x] = 1
-                print(table.shape)
+                if minval(other):
+                    table[np.where(column(quantum_table,x) == minval(other))[0][0]][x] = 2
 
             except IndexError as err:
                 # If the above code bounds the limits here breaks loop
                 break
         # remove from temp
         current.remove(min(current))
-
-    for y in range(table.shape[0]):
-        pass
 
 
 
