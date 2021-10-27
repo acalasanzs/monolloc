@@ -155,9 +155,6 @@ def Table():
                 if minval(quantum_column):
                     if minval(quantum_column) == quantum_table[idx][x]:
                         quantum_table[idx][x] = -1
-                        # IF REPEATED
-                        if np.where(column(quantum_table,x-quantum) == minval(column(quantum_table,x-quantum)))[0][0] == np.where(column(quantum_table,x) == minval(column(quantum_table,x)))[0][0]:
-                            print("repeated",np.where(column(quantum_table,x) == minval(column(quantum_table,x)))[0][0])
                         #print(quantum_table[::-1])
                         """ for h in range(len(quantum_column)):
                             if table[h][x] == 1:
@@ -172,10 +169,24 @@ def Table():
         current.remove(min(current))
 def Draw():
     global table
+    # Make a 2D chart of 0 of length sum(t)
+    current = ti.copy()
     # Calculate wait or run
-    for y in range(table.shape[0]):
-        for x in range(table.shape[1]):
-            print(column(quantum_table,x))
+    for idx,k in enumerate(ti):
+        # The first is wich is min TI and and its tf
+        first = (min(current),tf[ti.index(min(current))])
+        # Index of current x for chart is first[0]
+        for x in range(first[0],first[1]+1):
+            try:
+                # IF REPEATED
+                if np.where(column(quantum_table,x+quantum) == minval(column(quantum_table,x+quantum)))[0][0] == np.where(column(quantum_table,x) == minval(column(quantum_table,x)))[0][0]:
+                    table("repeated",np.where(column(quantum_table,x) == minval(column(quantum_table,x)))[0][0])
+
+            except IndexError as err:
+                # If the above code bounds the limits here breaks loop
+                break
+        # remove from temp
+        current.remove(min(current))
 
 
 
