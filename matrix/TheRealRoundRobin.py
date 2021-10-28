@@ -23,7 +23,7 @@ def DefaultInputs():
     t = Assgn(Ar2Dict(chars,"t"),conj="com a",rules=[False,False,True])
     t = [5,3,2,5]
     ti = Assgn(Ar2Dict(chars,"ti"),conj="com a",rules=[True,False,True])
-    ti = [3,0,2,1]
+    ti = [0,0,0,0]
 
     # Set tf and te to 0
     tf = [0] * abc.ans
@@ -145,61 +145,19 @@ def UpdateQuantum():
                 break
         # remove from temp
         current.remove(min(current))
-def Table():
+def ResolveQ():
     global table
     # Make a 2D chart of 0 of length sum(t)
-    current = ti.copy()
-    table = np.zeros((abc.ans,sum(t)))
-    print(" | ".join([str(tuple(a)) for a in zip(ti,tf)]))
-
     # Calculate wait or run
-    for idx,k in enumerate(ti):
-        # The first is wich is min TI and and its tf
-        first = (min(current),tf[ti.index(min(current))])
-        # Index of current x for chart is first[0]
-        for x in range(first[0],first[1]+1):
-            try:
-                quantum_column = column(quantum_table,x)
-                if minval(quantum_column):
-                    if minval(quantum_column) == quantum_table[idx][x]:
-                        quantum_table[idx][x] = -1
-                        #print(quantum_table[::-1])
-                        """ for h in range(len(quantum_column)):
-                            if table[h][x] == 1:
-                                table[h][x] = 2
-                                table[idx][x] = 1 """
-
-            except IndexError as err:
-                # If the above code bounds the limits here breaks loop
-                break
-        UpdateQuantum()
-        # remove from temp
-        current.remove(min(current))
-def Correct():
-    global table
-    # Make a 2D chart of 0 of length sum(t)
-    current = ti.copy()
-    # Calculate wait or run
-    for idx,k in enumerate(ti):
-        # The first is wich is min TI and and its tf
-        first = (min(current),tf[ti.index(min(current))])
-        # Index of current x for chart is first[0]
-        for x in range(first[0],first[1]+1):
-            done = False
-            try:
-                # IF REPEATED
-                if (np.where(column(quantum_table,x+quantum) == minval(column(quantum_table,x+quantum)))[0][0] == np.where(column(quantum_table,x) == minval(column(quantum_table,x)))[0][0]) and HowManyZeros(column(quantum_table,x)) < (abc.ans-1):
-                    if quantum_table[idx][x] == minval(column(quantum_table,x+quantum)):
-                        if not done:
-                            print(quantum_table[idx][x])
-                            quantum_table[idx][x] += 1/quantum
-                            quantum_table[idx-1][x] = 1/quantum
-                            done = True
-            except IndexError:
-                # If the above code bounds the limits here breaks loop
-                break
-        # remove from temp
-        current.remove(min(current))
+    last = -1
+    for x in range(table.shape[1]):
+        cprocesses = column(quantum_table,x)
+        # If duplicates
+    if len(set(cprocesses)) != len(cprocesses):
+        for idx,i in enumerate(cprocesses):
+            last += 1
+            print(last)
+            quantum_table[last][x] = -1
 def Draw():
     global table
     # Make a 2D chart of 0 of length sum(t)
@@ -233,7 +191,6 @@ def Draw():
                             other.remove(minval(other))
 
             except IndexError as err:
-                print(err)
                 # If the above code bounds the limits here breaks loop
                 break
         # remove from temp
@@ -245,10 +202,10 @@ def Draw():
 
 if __name__ == "__main__":
     DefaultInputs()
+    table = np.zeros((abc.ans,sum(t)))
     QTable()
-    Table()
-    Correct()
-    Draw()
+    ResolveQ()
+    #Draw()
     # Reverse table and update chart
     table = table[::-1]
     quantum_table = quantum_table[::-1]
