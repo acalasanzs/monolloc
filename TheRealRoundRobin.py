@@ -66,15 +66,15 @@ chars = []
 def DefaultInputs():
     global abc, t, ti , tf , te, quantum
     abc = Assgn(Ar2Dict(["cuants procesos"],"units"),vals=range(1,1001),rules=[False,False,True],ui=False)
-    abc.ans = 4
+    abc.ans = 3
     quantum = 1
     for o in range(1,abc.ans+1):
         chars.append(colnum_string(o))
 
     t = Assgn(Ar2Dict(chars,"t"),conj="com a",rules=[False,False,True])
-    t = [5,5,5,5]
+    t = [5,5,5]
     ti = Assgn(Ar2Dict(chars,"ti"),conj="com a",rules=[True,False,True])
-    ti = [0,1,0,3]
+    ti = [0,1,0]
 
     # Set tf and te to 0
     tf = [0] * abc.ans
@@ -147,7 +147,6 @@ def QTable():
     for idx,k in enumerate(current):
         # The first is wich is min TI and and its tf
         count = 0
-        print(idx)
         first = ( current[idx] , current[idx] + t[idx] -1 )
         # Index of current x for chart is first[0]
         for x in range(first[0],first[1]+1):
@@ -195,21 +194,19 @@ def UpdateQuantum():
 def ResolveQ():
     global table
     cprocesses = list(range(abc.ans))
-    currentmin = 0
-    for x in range(table.shape[1]):                     # x
-    # If duplicates 
+    for x in range(table.shape[1]):
+        # If duplicates 
+        cquantum_column = column(quantum_table,x)
         if len(set(column(quantum_table,x))) != len(column(quantum_table,x)):
-            #print(cprocesses)
-            quantum_table[currentmin][x] = -1
-            if len(cprocesses) > 1:
-                cprocesses.remove(min(cprocesses))
-                currentmin += 1
+            if len(cquantum_column) > 1:
+                currentmin = column(quantum_table,x).index(minval(column(quantum_table,x)))
+                print(currentmin)
+                cquantum_column.remove(minval(column(quantum_table,x)))
             else:
-                cprocesses = list(range(abc.ans))
                 currentmin = 0
+            quantum_table[currentmin][x] = -1
         else:
-            quantum_table[currentmin][x] = -1 if quantum_table[currentmin][x] == minval(column(quantum_table,x)) else quantum_table[currentmin][x] 
-    #UpdateQuantum()
+            quantum_table[currentmin][x] = -1 if quantum_table[currentmin][x] == minval(column(quantum_table,x)) else quantum_table[currentmin][x]
 def Draw():
     global table
     # Make a 2D chart of 0 of length sum(t)
@@ -258,7 +255,7 @@ if __name__ == "__main__":
     DefaultInputs()
     table = np.zeros((abc.ans,sum(t)))
     QTable()
-    #ResolveQ()
+    ResolveQ()
     Draw()
     # Reverse table and update chart
     table = table[::-1]
