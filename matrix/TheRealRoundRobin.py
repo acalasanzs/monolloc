@@ -16,7 +16,7 @@ def DefaultInputs():
     global abc, t, ti , tf , te, quantum
     abc = Assgn(Ar2Dict(["cuants procesos"],"units"),vals=range(1,1001),rules=[False,False,True],ui=False)
     abc.ans = 3
-    quantum = 2
+    quantum = 1
     for o in range(1,abc.ans+1):
         chars.append(colnum_string(o))
 
@@ -148,7 +148,6 @@ def UpdateQuantum():
 def Table():
     global table
     # Make a 2D chart of 0 of length sum(t)
-    table = np.zeros((abc.ans,sum(t)))
     current = ti.copy()
     print(" | ".join([str(tuple(a)) for a in zip(ti,tf)]))
 
@@ -194,7 +193,7 @@ def Correct():
                             quantum_table[idx][x] += 1/quantum
                             quantum_table[idx-1][x] = 1/quantum
                             done = True
-            except IndexError as err:
+            except IndexError:
                 # If the above code bounds the limits here breaks loop
                 break
         # remove from temp
@@ -204,7 +203,6 @@ def Draw():
     # Make a 2D chart of 0 of length sum(t)
     table = np.zeros((abc.ans,sum(t)))
     current = ti.copy()
-    print(" | ".join([str(tuple(a)) for a in zip(ti,tf)]))
 
     # Calculate wait or run
     for idx,k in enumerate(ti):
@@ -215,12 +213,21 @@ def Draw():
             try:
                 other = column(quantum_table,x)
                 other.remove(minval(other))
-
+                column_set = set(column(quantum_table,x))
+                if 0 in column_set:
+                    column_set.remove(0)
+                column_arr = column(quantum_table,x)
+                for x in column(quantum_table,x):
+                    if x == 0:
+                        column_arr.remove(x)
+                if len(column_set) != len(column_arr):
+                    print(column_set,column_arr)
                 table[np.where(column(quantum_table,x) == minval(column(quantum_table,x)))[0][0]][x] = 1
                 if minval(other):
                     table[np.where(column(quantum_table,x) == minval(other))[0][0]][x] = 2
 
             except IndexError as err:
+                print(err)
                 # If the above code bounds the limits here breaks loop
                 break
         # remove from temp
