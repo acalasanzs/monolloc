@@ -16,11 +16,7 @@ def Interface():
     img = pygame.image.load('global.jpg')
     pygame.display.set_icon(img)
 
-    run = True
-
     clock = pygame.time.Clock()
-
-    dif = 1000/table.shape[0]
     FPS = 24
 
 
@@ -47,7 +43,6 @@ def Interface():
                     pygame.draw.rect(screen, (255,255,255), rect, 1)
 
     while True:
-        dif = screen.get_width()/table.shape[0]
         screen.fill((25,25,25))
 
         drawGrid()
@@ -77,9 +72,9 @@ def DefaultInputs():
         chars.append(colnum_string(o))
 
     t = Assgn(Ar2Dict(chars,"t"),conj="com a",rules=[False,False,True])
-    t = [5,3,2,5]
+    t = [5,5,5,5]
     ti = Assgn(Ar2Dict(chars,"ti"),conj="com a",rules=[True,False,True])
-    ti = [0,1,2,3]
+    ti = [0,1,0,3]
 
     # Set tf and te to 0
     tf = [0] * abc.ans
@@ -149,25 +144,20 @@ def QTable():
     current = ti.copy()
     quant = [0] * abc.ans
     # Calculate wait or run
-    for idx,k in enumerate(ti):
+    for idx,k in enumerate(current):
         # The first is wich is min TI and and its tf
         count = 0
-        first = (min(current),tf[ti.index(min(current))])
+        print(idx)
+        first = ( current[idx] , current[idx] + t[idx] -1 )
         # Index of current x for chart is first[0]
         for x in range(first[0],first[1]+1):
             count += 1/quantum
-            """ if int(count) < 1:
-                quant[idx] = 1
-            else:
-                quant[idx] = int(count) """
             quant[idx] = count
             try:
                 quantum_table[idx][x] = quant[idx]
             except IndexError:
                 # If the above code bounds the limits here breaks loop
                 break
-        # remove from temp
-        current.remove(min(current))
 
 def UpdateQuantum():
     global quantum_table
@@ -268,7 +258,7 @@ if __name__ == "__main__":
     DefaultInputs()
     table = np.zeros((abc.ans,sum(t)))
     QTable()
-    ResolveQ()
+    #ResolveQ()
     Draw()
     # Reverse table and update chart
     table = table[::-1]
@@ -291,4 +281,4 @@ if __name__ == "__main__":
         file = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         for x in table:
             file.writerow([int(i) for i in x])
-    Interface()
+    #Interface()
