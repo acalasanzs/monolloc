@@ -15,15 +15,15 @@ chars = []
 def DefaultInputs():
     global abc, t, ti , tf , te, quantum
     abc = Assgn(Ar2Dict(["cuants procesos"],"units"),vals=range(1,1001),rules=[False,False,True],ui=False)
-    abc.ans = 3
+    abc.ans = 4
     quantum = 1
     for o in range(1,abc.ans+1):
         chars.append(colnum_string(o))
 
     t = Assgn(Ar2Dict(chars,"t"),conj="com a",rules=[False,False,True])
-    t = [5,3,2]
+    t = [5,3,2,5]
     ti = Assgn(Ar2Dict(chars,"ti"),conj="com a",rules=[True,False,True])
-    ti = [3,1,0]
+    ti = [3,0,2,1]
 
     # Set tf and te to 0
     tf = [0] * abc.ans
@@ -149,6 +149,7 @@ def Table():
     global table
     # Make a 2D chart of 0 of length sum(t)
     current = ti.copy()
+    table = np.zeros((abc.ans,sum(t)))
     print(" | ".join([str(tuple(a)) for a in zip(ti,tf)]))
 
     # Calculate wait or run
@@ -182,14 +183,15 @@ def Correct():
     for idx,k in enumerate(ti):
         # The first is wich is min TI and and its tf
         first = (min(current),tf[ti.index(min(current))])
-        done = False
         # Index of current x for chart is first[0]
         for x in range(first[0],first[1]+1):
+            done = False
             try:
                 # IF REPEATED
                 if (np.where(column(quantum_table,x+quantum) == minval(column(quantum_table,x+quantum)))[0][0] == np.where(column(quantum_table,x) == minval(column(quantum_table,x)))[0][0]) and HowManyZeros(column(quantum_table,x)) < (abc.ans-1):
                     if quantum_table[idx][x] == minval(column(quantum_table,x+quantum)):
                         if not done:
+                            print(quantum_table[idx][x])
                             quantum_table[idx][x] += 1/quantum
                             quantum_table[idx-1][x] = 1/quantum
                             done = True
@@ -201,7 +203,6 @@ def Correct():
 def Draw():
     global table
     # Make a 2D chart of 0 of length sum(t)
-    table = np.zeros((abc.ans,sum(t)))
     current = ti.copy()
 
     # Calculate wait or run
@@ -217,14 +218,19 @@ def Draw():
                 if 0 in column_set:
                     column_set.remove(0)
                 column_arr = column(quantum_table,x)
-                for x in column(quantum_table,x):
-                    if x == 0:
-                        column_arr.remove(x)
+                for h in column(quantum_table,x):
+                    if h == 0:
+                        column_arr.remove(h)
                 if len(column_set) != len(column_arr):
-                    print(column_set,column_arr)
+                    pass
                 table[np.where(column(quantum_table,x) == minval(column(quantum_table,x)))[0][0]][x] = 1
                 if minval(other):
-                    table[np.where(column(quantum_table,x) == minval(other))[0][0]][x] = 2
+                    for _ in other:
+                        if minval(other):
+                            if table[np.where(column(quantum_table,x) == minval(other))[0][0]][x] == 1:
+                                other.remove(minval(other))
+                            table[np.where(column(quantum_table,x) == minval(other))[0][0]][x] = 2
+                            other.remove(minval(other))
 
             except IndexError as err:
                 print(err)
