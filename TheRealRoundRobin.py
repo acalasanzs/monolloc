@@ -200,13 +200,13 @@ def ResolveQ():
         if len(set(column(quantum_table,x))) != len(column(quantum_table,x)):
             if len(cquantum_column) > 1:
                 currentmin = column(quantum_table,x).index(minval(column(quantum_table,x)))
-                print(currentmin)
                 cquantum_column.remove(minval(column(quantum_table,x)))
             else:
                 currentmin = 0
             quantum_table[currentmin][x] = -1
         else:
-            quantum_table[currentmin][x] = -1 if quantum_table[currentmin][x] == minval(column(quantum_table,x)) else quantum_table[currentmin][x]
+            if quantum_table[currentmin][x] == minval(column(quantum_table,x)):
+                quantum_table[currentmin][x] = -1
 def Draw():
     global table
     # Make a 2D chart of 0 of length sum(t)
