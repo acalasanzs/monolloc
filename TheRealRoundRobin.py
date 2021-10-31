@@ -3,7 +3,7 @@ import numpy as np
 import csv
 from assgnopts import *
 print(color.t.OKGREEN+"Round Robin Chart"+color.end)
-"There's an errror with self.vals that return 0 array"
+"Array error solved on assgnopts 3.10"
 def Interface():
     # Init font pygame
     pygame.font.init()
@@ -193,20 +193,35 @@ def UpdateQuantum():
         current.remove(min(current))
 def ResolveQ():
     global table
-    cprocesses = list(range(abc.ans))
+    cquantum = [quantum] * abc.ans
+    last_index = None
     for x in range(table.shape[1]):
-        # If duplicates 
         cquantum_column = column(quantum_table,x)
-        if len(set(column(quantum_table,x))) != len(column(quantum_table,x)):
-            if len(cquantum_column) > 1:
-                currentmin = column(quantum_table,x).index(minval(column(quantum_table,x)))
-                cquantum_column.remove(minval(column(quantum_table,x)))
-            else:
-                currentmin = 0
-            quantum_table[currentmin][x] = -1
-        else:
-            if quantum_table[currentmin][x] == minval(column(quantum_table,x)):
-                quantum_table[currentmin][x] = -1
+        temp = []
+        cquantum_index = cquantum_column.index(minval(cquantum_column))
+        temp = cquantum_column.copy()
+        cquantum[cquantum_index] -= 1
+        # If same
+        if x > 0:
+            if minval(temp):
+                dif = 0
+                if cquantum[cquantum_index] == 0:
+                    print(x)
+                    while True:
+                        temp.remove(minval(temp))
+                        dif += 1
+                        if not minval(temp):
+                            break
+                        cquantum_index = temp.index(minval(temp)) + dif
+                        if last_index != cquantum_index:
+                            break
+            if last_index == cquantum_index and minval(temp) <= cquantum_column[last_index]:
+                cquantum_index = cquantum_column.index(minval(temp))
+        quantum_table[cquantum_index][x] = -1
+        last_index = cquantum_index
+        UpdateQuantum()
+
+
 def Draw():
     global table
     # Make a 2D chart of 0 of length sum(t)
@@ -278,4 +293,4 @@ if __name__ == "__main__":
         file = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         for x in table:
             file.writerow([int(i) for i in x])
-    #Interface()
+    Interface()
