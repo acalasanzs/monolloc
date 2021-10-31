@@ -199,14 +199,20 @@ def ResolveQ():
         cquantum_column = column(quantum_table,x)
         temp = []
         cquantum_index = cquantum_column.index(minval(cquantum_column))
+        if x > 0:
+            if last_index == cquantum_index and minval(temp) <= cquantum_column[last_index]:
+                try:
+                    cquantum_index = cquantum_column.index(minval(temp))
+                except ValueError:
+                    cquantum_index = cquantum_column.index(minval(cquantum_column))
         temp = cquantum_column.copy()
         cquantum[cquantum_index] -= 1
         # If same
         if x > 0:
             if minval(temp):
                 dif = 0
+                print(cquantum[cquantum_index])
                 if cquantum[cquantum_index] == 0:
-                    print(x)
                     while True:
                         temp.remove(minval(temp))
                         dif += 1
@@ -215,11 +221,13 @@ def ResolveQ():
                         cquantum_index = temp.index(minval(temp)) + dif
                         if last_index != cquantum_index:
                             break
-            if last_index == cquantum_index and minval(temp) <= cquantum_column[last_index]:
-                cquantum_index = cquantum_column.index(minval(temp))
-        quantum_table[cquantum_index][x] = -1
+                    cquantum[cquantum_index] = quantum
+        if t[cquantum_index] > 0:
+            quantum_table[cquantum_index][x] = -1
+            quantum_table[cquantum_index][x+1] = 1*t[cquantum_index]/quantum
+            t[cquantum_index] -= 1
         last_index = cquantum_index
-        UpdateQuantum()
+        #UpdateQuantum()
 
 
 def Draw():
@@ -293,4 +301,8 @@ if __name__ == "__main__":
         file = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         for x in table:
             file.writerow([int(i) for i in x])
+        else:
+            file.writerow("")
+            for x in quantum_table:
+                file.writerow([i for i in x])
     Interface()
