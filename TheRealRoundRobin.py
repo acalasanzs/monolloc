@@ -211,7 +211,8 @@ def ResolveQ():
         if x > 0:
             if minval(temp):
                 dif = 0
-                print(cquantum[cquantum_index])
+                if cquantum[cquantum_index] < -1:
+                    cquantum[cquantum_index] = 0
                 if cquantum[cquantum_index] == 0:
                     while True:
                         temp.remove(minval(temp))
@@ -219,7 +220,7 @@ def ResolveQ():
                         if not minval(temp):
                             break
                         cquantum_index = temp.index(minval(temp)) + dif
-                        if last_index != cquantum_index:
+                        if last_index != cquantum_index and t[last_index] > t[cquantum_index]:
                             break
                     cquantum[cquantum_index] = quantum
         if t[cquantum_index] > 0:
