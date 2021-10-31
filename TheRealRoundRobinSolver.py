@@ -67,7 +67,7 @@ def DefaultInputs():
     global abc, t, ti , tf , te, quantum
     abc = Assgn(Ar2Dict(["cuants procesos"],"units"),vals=range(1,1001),rules=[False,False,True],ui=False)
     abc.ans = 3
-    quantum = 1
+    quantum = 2
     for o in range(1,abc.ans+1):
         chars.append(colnum_string(o))
 
@@ -198,8 +198,13 @@ def ResolveQ():
     for x in range(table.shape[1]):
         cquantum_column = column(quantum_table,x)
         temp = []
-        cquantum_index = cquantum_column.index(minval(cquantum_column))
-        if x > 0:
+        if x == 0:
+            cquantum_index = cquantum_column.index(minval(cquantum_column))
+        else:
+            if cquantum[last_index] == 0:
+                cquantum_index = cquantum_column.index(minval(cquantum_column))
+            else:
+                cquantum_index = last_index
             if last_index == cquantum_index and minval(temp) <= cquantum_column[last_index]:
                 try:
                     cquantum_index = cquantum_column.index(minval(temp))
@@ -211,8 +216,6 @@ def ResolveQ():
         if x > 0:
             if minval(temp):
                 dif = 0
-                if cquantum[cquantum_index] < -1:
-                    cquantum[cquantum_index] = 0
                 if cquantum[cquantum_index] == 0:
                     while True:
                         temp.remove(minval(temp))
